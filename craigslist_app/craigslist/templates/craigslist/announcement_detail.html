@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+
+{% block header %}
+    <header class="bg-dark py-5">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="text-center text-white">
+                <h1 class="display-4 fw-bolder">Strona z ogłoszeniami</h1>
+            </div>
+        </div>
+    </header>
+{% endblock %}
+
+{% block content %}
+    <section>
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="row gx-4 gx-lg-5 align-items-center">
+                <div class="col-md-6">
+                    <img class="card-img-top mb-5 mb-md-0" src="{{object.image.url}}" />
+                </div>
+                <div class="col-md-6">
+                    <div class="small mb-1">Dodane przez użytkownika {{ object.user_who_added }}</div>
+                    <h1 class="display-5 fw-bolder">{{ object.title }}</h1>
+                    <div class="fs-5 mb-5">
+                        <span class="fw-bold">Cena:</span>
+                        <span>{{ object.price }} zł</span>
+                    </div>
+                    <p class="lead">
+                        <span class="fw-bold d-block">Opis ogłoszenia:</span>
+                        {{ object.description }}
+                    </p>
+                    <div class="d-flex">
+                        {% if user.is_authenticated  and user != object.user_who_added%}
+                            <a class="btn btn-outline-dark flex-shrink-0">
+                                Zarezerwuj przedmiot u kupującego
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

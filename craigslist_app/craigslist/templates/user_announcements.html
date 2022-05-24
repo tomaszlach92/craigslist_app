@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block header %}
+    <header class="bg-dark py-5">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="text-center text-white">
+                <h1 class="display-4 fw-bolder">Strona z ogłoszeniami</h1>
+                <p class="lead fw-normal text-white-50 mb-0">
+                   Lista Twoich wszystkich ogłoszeń
+                </p>
+            </div>
+        </div>
+    </header>
+{% endblock %}
+{% block content %}
+    <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3">
+        <ul class="list-group">
+            {% for announcement in announcements%}
+                <li class="list-group-item">
+                    <div>
+                        <span class="fw-bold">{{ announcement.title}}</span>
+                    </div>
+                    <div>
+                        <span class="fw-bold">Cena:</span>
+                        <span>{{ announcement.price}} zł</span>
+                    </div>
+                    <div>
+                        <span class="fw-bold">Opis:</span>
+                        <span>{{ announcement.description|truncatechars:10}}</span>
+                    </div>
+                    <div>
+                        <span class="fw-bold">Kategoria:</span>
+                        <span>{{ announcement.category}}</span>
+                    </div>
+                    <div>
+                        <span class="fw-bold">Status:</span>
+                        <span>{{ announcement.status}}</span>
+                    </div>
+
+
+                    <a class="btn btn-primary" href={% url 'edit-announcement' pk=announcement.id %}>Edytuj</a>
+                    <a class="btn btn-danger" href={% url 'delete-announcement' pk=announcement.id %}>Usuń</a>
+                </li>
+            {% empty %}
+        </ul>
+        <div class="text-center display-4">
+            Nie dodałeś jeszcze żadnego ogłoszenia.
+        </div>
+    {% endfor %}
+    </div>
+{% endblock %}
