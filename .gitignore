@@ -283,6 +283,7 @@ fabric.properties
 .idea/codestream.xml
 
 media/
+staticfiles/
 
 ### Python ###
 # Byte-compiled / optimized / DLL files

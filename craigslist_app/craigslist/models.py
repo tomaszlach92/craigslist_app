@@ -33,7 +33,7 @@ class Announcement(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     user_who_added = models.ForeignKey(User, on_delete=models.CASCADE)
     status = models.IntegerField(choices=STATUS, default=1)
-    image = models.ImageField(upload_to='images/%Y/%m/%d')
+    image = models.ImageField(upload_to='staticfiles/%Y/%m/%d')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
