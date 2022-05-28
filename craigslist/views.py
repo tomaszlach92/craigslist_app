@@ -136,7 +136,8 @@ class RegisterUserView(FormView):
             password=password
         )
         redirect_site = super().form_valid(form)
-        messages.add_message(self.request, messages.SUCCESS, _('Zostałeś zarejestrowany! Zaloguj się by móc dodawać ogłoszenia!'))
+        messages.add_message(self.request, messages.SUCCESS,
+                             _('Zostałeś zarejestrowany! Zaloguj się by móc dodawać ogłoszenia!'))
         return redirect_site
 
 
@@ -158,9 +159,16 @@ class UserProfileView(View):
             messages.add_message(request, messages.SUCCESS, _('Profil zaaktualizowany!'))
             return redirect('my-profile')
         else:
-            messages.add_message(request, messages.WARNING,_('Popraw błędy w formularzu'))
+            messages.add_message(request, messages.WARNING, _('Popraw błędy w formularzu'))
         profile_form = ProfileForm(instance=request.user.profile)
         return render(request, 'profile.html', {
             'user_form': user_form,
             'profile_form': profile_form
         })
+
+
+class ReservationCreateView(View):
+    def post(self, request):
+        messages.add_message(request, messages.SUCCESS,
+                             _('Przedmiot zarezerwowany u kupującego! Skontaktuj się z nim w celu realizacji transakcji'))
+        return redirect('index')
