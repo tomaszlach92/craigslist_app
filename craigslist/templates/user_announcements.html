@@ -31,7 +31,7 @@
                         <span>{{ announcement.status }}</span>
                     </div>
 
-
+                    <a class="btn btn-info" href={% url 'announcement' pk=announcement.id %}>Podgląd</a>
                     <a class="btn btn-primary" href={% url 'edit-announcement' pk=announcement.id %}>Edytuj</a>
                     <a class="btn btn-danger" href={% url 'delete-announcement' pk=announcement.id %}>Usuń</a>
                 </li>
