@@ -65,10 +65,12 @@
             <header class="bg-dark py-5">
                 <div class="container px-4 px-lg-5 my-5">
                     <div class="text-center text-white">
-                        <h1 class="display-4 fw-bolder">Strona z ogłoszeniami</h1>
-                        <p class="lead fw-normal text-white-50 mb-0">
-                            Lista najnowszych ogłoszeń w serwisie
-                        </p>
+                        <h1 class="display-4 fw-bolder">Serwis z ogłoszeniami</h1>
+                        {% block header_text %}
+                            <p class="lead fw-normal text-white-50 mb-0">
+                                Lista najnowszych ogłoszeń w serwisie
+                            </p>
+                        {% endblock %}
                     </div>
                 </div>
             </header>
