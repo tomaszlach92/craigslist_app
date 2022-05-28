@@ -13,9 +13,15 @@
                 </div>
                 <div class="col-md-6">
                     <div class="small mb-1">Dodane przez użytkownika {{ object.user_who_added }}</div>
-                    <span class="badge bg-danger">Zarezerwowane</span>
-                    <span class="badge bg-success">Aktualne</span>
-                    <span class="badge bg-dark">Sprzedane</span>
+                    {% if object.status == 1 %}
+                        <span class="badge bg-success">Aktualne</span>
+                    {% endif %}
+                    {% if object.status == 4 %}
+                        <span class="badge bg-danger">Zarezerwowane</span>
+                    {% endif %}
+                    {% if object.status == 5 %}
+                        <span class="badge bg-dark">Sprzedane</span>
+                    {% endif %}
                     <h1 class="display-5 fw-bolder">{{ object.title }}</h1>
                     <div class="fs-5 mb-5">
                         <span class="fw-bold">Cena:</span>
@@ -26,9 +32,10 @@
                         {{ object.description }}
                     </p>
                     <div class="d-flex">
-                        {% if user.is_authenticated  and user != object.user_who_added%}
+                        {% if user.is_authenticated  and user != object.user_who_added and object.status == 1 %}
                             <form name="create_station" method="post" action="{% url 'book-announcement' %}">
                                 {% csrf_token %}
+                                <input name="announcement_id" hidden value="{{ object.id }}">
                                 <input class="btn btn-outline-dark flex-shrink-0" type="submit" value="Zarezerwuj przedmiot u kupującego"/>
                             </form>
                         {% endif %}

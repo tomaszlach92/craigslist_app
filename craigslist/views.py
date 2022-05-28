@@ -4,7 +4,7 @@ from django.views.generic import FormView, ListView, UpdateView, DeleteView, Det
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.urls import reverse_lazy
 from .forms import AnnouncementForm, LoginForm, RegisterUserForm, UserForm, ProfileForm
-from .models import Announcement, Category, STATUS
+from .models import Announcement, Category, STATUS, Reservation
 from django.contrib.auth.models import User as AppUser
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
@@ -167,8 +167,29 @@ class UserProfileView(View):
         })
 
 
-class ReservationCreateView(View):
+class ReservationCreateView(LoginRequiredMixin, View):
     def post(self, request):
+        announcement_id = request.POST['announcement_id']
+
+        announcement = Announcement.objects.get(pk=announcement_id)
+        announcement.status = 4
+        announcement.save()
+
+        Reservation.objects.create(
+            announcement=announcement,
+            reserved_by_user=self.request.user,
+        )
+
         messages.add_message(request, messages.SUCCESS,
-                             _('Przedmiot zarezerwowany u kupującego! Skontaktuj się z nim w celu realizacji transakcji'))
+                             _('Przedmiot zarezerwowany u sprzedającego! Skontaktuj się z nim w celu realizacji transakcji'))
         return redirect('index')
+
+class UserReservationsView(LoginRequiredMixin, View):
+    def get(self, request):
+        user = request.user
+        reservations = Reservation.objects.filter(reserved_by_user=user)
+        return render(request=request,
+                      template_name="user_reservations.html",
+                      context={
+                          "reservations": reservations
+                      })

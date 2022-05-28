@@ -19,7 +19,8 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 from craigslist.views import AnnouncementListView, AddAnnouncementView, CategoryAnnouncementView, LoginView, LogoutView, RegisterUserView, \
-    UserAnnouncementView, AnnouncementUpdateView, AnnouncementDeleteView, UserProfileView, AnnouncementDetailView, ReservationCreateView
+    UserAnnouncementView, AnnouncementUpdateView, AnnouncementDeleteView, UserProfileView, AnnouncementDetailView, ReservationCreateView,\
+    UserReservationsView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -35,4 +36,5 @@ urlpatterns = [
     path('register/', RegisterUserView.as_view(), name="register"),
     path('my-profile/', UserProfileView.as_view(), name="my-profile"),
     path('book-announcement/', ReservationCreateView.as_view(), name="book-announcement"),
+    path('my-reservations/', UserReservationsView.as_view(), name="my-reservations"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

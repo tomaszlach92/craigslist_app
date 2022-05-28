@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block header_text %}
+    <p class="lead fw-normal text-white-50 mb-0">
+        Lista Twoich wszystkich Twoich rezerwacji
+    </p>
+{% endblock %}
+
+{% block content %}
+    <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3">
+        <ul class="list-group">
+            {% for reservation in reservations %}
+                <li class="list-group-item">
+                    <span class="h5 fw-bold">Ogłoszenie:</span>
+                    <div>
+                        <span class="fw-bold">{{ reservation.announcement.title}}</span>
+                    </div>
+                    <div>
+                        <span class="fw-bold">Cena:</span>
+                        <span>{{ reservation.announcement.price}} zł</span>
+                    </div>
+
+
+                    <div class="pt-3">
+                        <span class="h5 fw-bold py-3">Dane Sprzedającego:</span>
+                        <span class="fw-bold">Imię:</span>
+                        <span>{{ reservation.announcement.user_who_added.first_name }}</span>
+                    </div>
+                    <div>
+                        <span class="fw-bold">Nazwisko:</span>
+                        <span>{{ reservation.announcement.user_who_added.last_name }}</span>
+                    </div>
+                    <div>
+                        <span class="fw-bold">Numer telefonu:</span>
+                        <span>{{ reservation.announcement.user_who_added.profile.phone }}</span>
+                    </div>
+                    <div class="pt-2">
+                        <a class="btn btn-primary">Przedmiot otrzymany</a>
+                    </div>
+                </li>
+            {% empty %}
+        </ul>
+        <div class="text-center display-4">
+            Nie zarezerwowałeś jeszcze żadnego ogłoszenia.
+        </div>
+    {% endfor %}
+    </div>
+{% endblock %}
