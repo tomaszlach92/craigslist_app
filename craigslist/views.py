@@ -148,7 +148,8 @@ class RegisterUserView(FormView):
         return redirect_site
 
 
-class UserProfileView(View):
+class UserProfileView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('login')
     def get(self, request):
         user_form = UserForm(instance=request.user)
         profile_form = ProfileForm(instance=request.user.profile)
