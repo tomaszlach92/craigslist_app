@@ -28,12 +28,34 @@
                     </div>
                     <div>
                         <span class="fw-bold">Status:</span>
-                        <span>{{ announcement.status }}</span>
+                        <span>{{ announcement.get_status_display }}</span>
                     </div>
 
+                    {% if announcement.status == 4 %}
+                        <h5 class="fw-bold">Dane rezerwującego:</h5>
+                        <div>
+                            <span class="fw-bold">Nazwa Użytkownika:</span>
+                            <span>{{ announcement.reservation_set.last.reserved_by_user }}</span>
+                        </div>
+                        <div>
+                            <span class="fw-bold">Imię:</span>
+                            <span>{{ announcement.reservation}}</span>
+                        </div>
+                        <div>
+                            <span class="fw-bold">Nazwisko:</span>
+                            <span>{{ announcement.reserved_by_user }}</span>
+                        </div>
+                        <div>
+                            <span class="fw-bold">Numer telefonu:</span>
+                            <span>{{ announcement.reservation.reserved_by_user.profile.phone }}</span>
+                        </div>
+                    {% endif %}
+
                     <a class="btn btn-info" href={% url 'announcement' pk=announcement.id %}>Podgląd</a>
-                    <a class="btn btn-primary" href={% url 'edit-announcement' pk=announcement.id %}>Edytuj</a>
-                    <a class="btn btn-danger" href={% url 'delete-announcement' pk=announcement.id %}>Usuń</a>
+                    {% if announcement.status == 1 %}
+                        <a class="btn btn-primary" href={% url 'edit-announcement' pk=announcement.id %}>Edytuj</a>
+                        <a class="btn btn-danger" href={% url 'delete-announcement' pk=announcement.id %}>Usuń</a>
+                    {% endif %}
                 </li>
             {% empty %}
         </ul>

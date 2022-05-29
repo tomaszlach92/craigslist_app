@@ -11,7 +11,10 @@
         <ul class="list-group">
             {% for reservation in reservations %}
                 <li class="list-group-item">
-                    <span class="h5 fw-bold">Ogłoszenie:</span>
+                    {% if reservation.announcement.status == 5 %}
+                        <span class="badge badge-pill bg-success mb-1">Potwierdzono otrzymanie przedmiotu</span>
+                    {% endif %}
+                    <h5 class="fw-bold">Ogłoszenie:</h5>
                     <div>
                         <span class="fw-bold">{{ reservation.announcement.title}}</span>
                     </div>
@@ -20,9 +23,8 @@
                         <span>{{ reservation.announcement.price}} zł</span>
                     </div>
 
-
-                    <div class="pt-3">
-                        <span class="h5 fw-bold py-3">Dane Sprzedającego:</span>
+                    <h5 class="fw-bold">Dane Sprzedającego:</h5>
+                    <div>
                         <span class="fw-bold">Imię:</span>
                         <span>{{ reservation.announcement.user_who_added.first_name }}</span>
                     </div>
@@ -34,9 +36,18 @@
                         <span class="fw-bold">Numer telefonu:</span>
                         <span>{{ reservation.announcement.user_who_added.profile.phone }}</span>
                     </div>
-                    <div class="pt-2">
-                        <a class="btn btn-primary">Przedmiot otrzymany</a>
-                    </div>
+                    {% if reservation.announcement.status == 4 %}
+                        <div class="py-2">
+                            <form name="create_station" method="post" action="{% url 'confirm' %}">
+                                {% csrf_token %}
+                                <input name="announcement_id" hidden value="{{ reservation.announcement.id }}">
+                                <input class="btn btn-outline-dark flex-shrink-0" type="submit" value="Potwierdź otrzymanie przedmiotu"/>
+                            </form>
+                        </div>
+                    {% endif %}
+                    <a class="btn btn-info" href={% url 'announcement' pk=reservation.announcement.id %}>
+                        Podgląd zarezerwowanego przedmiotu
+                    </a>
                 </li>
             {% empty %}
         </ul>

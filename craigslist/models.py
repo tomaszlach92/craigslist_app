@@ -57,4 +57,9 @@ class Profile(models.Model):
 
 class Reservation(models.Model):
     announcement = models.ForeignKey(Announcement, on_delete=models.CASCADE)
-    reserved_by_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    reserved_by_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reservation")
+
+
+class Transaction(models.Model):
+    seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name="seller")
+    buyer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="buyer")

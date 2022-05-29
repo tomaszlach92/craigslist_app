@@ -4,7 +4,7 @@ from django.views.generic import FormView, ListView, UpdateView, DeleteView, Det
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.urls import reverse_lazy
 from .forms import AnnouncementForm, LoginForm, RegisterUserForm, UserForm, ProfileForm
-from .models import Announcement, Category, STATUS, Reservation
+from .models import Announcement, Category, STATUS, Reservation, Transaction
 from django.contrib.auth.models import User as AppUser
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
@@ -17,6 +17,9 @@ class AnnouncementListView(ListView):
     model = Announcement
     template_name = 'index.html'
     context_object_name = 'announcements'
+
+    def get_queryset(self):
+        return Announcement.objects.filter(status=1)
 
 
 class CategoryAnnouncementView(View):
@@ -193,3 +196,19 @@ class UserReservationsView(LoginRequiredMixin, View):
                       context={
                           "reservations": reservations
                       })
+
+class TransactionCreateView(LoginRequiredMixin, View):
+    def post(self, request):
+        announcement_id = request.POST['announcement_id']
+        announcement = Announcement.objects.get(pk=announcement_id)
+        announcement.status = 5
+        announcement.save()
+
+        Transaction.objects.create(
+            seller=announcement.user_who_added,
+            buyer=self.request.user,
+        )
+
+        messages.add_message(request, messages.SUCCESS,
+                             _('Potwierdziłeś otrzymanie przedmiotu. Dziękujemy za skorzystanie z serwisu'))
+        return redirect('index')
