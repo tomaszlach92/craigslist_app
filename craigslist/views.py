@@ -36,6 +36,7 @@ class CategoryAnnouncementView(View):
 
 class UserAnnouncementView(LoginRequiredMixin, View):
     login_url = reverse_lazy('login')
+
     def get(self, request):
         user = request.user
         announcements = Announcement.objects.filter(user_who_added=user)
@@ -68,7 +69,8 @@ class AddAnnouncementView(LoginRequiredMixin, FormView):
             user_who_added=user_who_added,
             image=image,
         )
-        messages.add_message(self.request, messages.SUCCESS, _('Ogłoszenie zostało dodane. Zanim pojawi się na stronie głównej musi zostać zaakceptowane przez Administratora'))
+        messages.add_message(self.request, messages.SUCCESS,
+                             _('Ogłoszenie zostało dodane. Zanim pojawi się na stronie głównej musi zostać zaakceptowane przez Administratora'))
         redirect_site = super().form_valid(form)
         return redirect_site
 
@@ -154,6 +156,7 @@ class RegisterUserView(FormView):
 
 class UserProfileView(LoginRequiredMixin, View):
     login_url = reverse_lazy('login')
+
     def get(self, request):
         user_form = UserForm(instance=request.user)
         profile_form = ProfileForm(instance=request.user.profile)
@@ -181,6 +184,7 @@ class UserProfileView(LoginRequiredMixin, View):
 
 class ReservationCreateView(LoginRequiredMixin, View):
     login_url = reverse_lazy('login')
+
     def post(self, request):
         announcement_id = request.POST['announcement_id']
 
@@ -197,8 +201,10 @@ class ReservationCreateView(LoginRequiredMixin, View):
                              _('Przedmiot zarezerwowany u sprzedającego! Skontaktuj się z nim w celu realizacji transakcji'))
         return redirect('index')
 
+
 class UserReservationsView(LoginRequiredMixin, View):
     login_url = reverse_lazy('login')
+
     def get(self, request):
         user = request.user
         reservations = Reservation.objects.filter(reserved_by_user=user)
@@ -208,8 +214,10 @@ class UserReservationsView(LoginRequiredMixin, View):
                           "reservations": reservations
                       })
 
+
 class TransactionCreateView(LoginRequiredMixin, View):
     login_url = reverse_lazy('login')
+
     def post(self, request):
         announcement_id = request.POST['announcement_id']
         announcement = Announcement.objects.get(pk=announcement_id)
