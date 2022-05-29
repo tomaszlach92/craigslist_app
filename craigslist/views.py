@@ -50,6 +50,7 @@ class AddAnnouncementView(LoginRequiredMixin, FormView):
     template_name = 'form.html'
     success_url = reverse_lazy('index')
     form_class = AnnouncementForm
+    login_url = reverse_lazy('login')
 
     def form_valid(self, form):
         title = form.cleaned_data['title']
