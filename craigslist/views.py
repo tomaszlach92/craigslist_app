@@ -19,13 +19,13 @@ class AnnouncementListView(ListView):
     context_object_name = 'announcements'
 
     def get_queryset(self):
-        return Announcement.objects.filter(status=2)
+        return Announcement.objects.filter(status=2).order_by('created_at').reverse()
 
 
 class CategoryAnnouncementView(View):
     def get(self, request, category_id):
         category = get_object_or_404(Category, id=category_id)
-        announcements = Announcement.objects.filter(category_id=category_id, status=2)
+        announcements = Announcement.objects.filter(category_id=category_id, status=2).order_by('created_at').reverse()
         return render(request=request,
                       template_name="category_announcements.html",
                       context={
