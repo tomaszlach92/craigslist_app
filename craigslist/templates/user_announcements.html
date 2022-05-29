@@ -11,6 +11,9 @@
         <ul class="list-group">
             {% for announcement in announcements%}
                 <li class="list-group-item">
+                    {% if announcement.get_status_display == "sprzedane" %}
+                        <span class="badge badge-pill bg-success mb-1">Kupujący potwierdził otrzymanie przedmiotu</span>
+                    {% endif %}
                     <div>
                         <span class="fw-bold">{{ announcement.title}}</span>
                     </div>
@@ -39,20 +42,20 @@
                         </div>
                         <div>
                             <span class="fw-bold">Imię:</span>
-                            <span>{{ announcement.reservation}}</span>
+                            <span>{{ announcement.reservation_set.last.reserved_by_user.first_name }}</span>
                         </div>
                         <div>
                             <span class="fw-bold">Nazwisko:</span>
-                            <span>{{ announcement.reserved_by_user }}</span>
+                            <span>{{ announcement.reservation_set.last.reserved_by_user.last_name }}</span>
                         </div>
                         <div>
                             <span class="fw-bold">Numer telefonu:</span>
-                            <span>{{ announcement.reservation.reserved_by_user.profile.phone }}</span>
+                            <span>{{ announcement.reservation_set.last.reserved_by_user.profile.phone }}</span>
                         </div>
                     {% endif %}
 
                     <a class="btn btn-info" href={% url 'announcement' pk=announcement.id %}>Podgląd</a>
-                    {% if announcement.status == 1 %}
+                    {% if announcement.status == 1 or announcement.status == 2%}
                         <a class="btn btn-primary" href={% url 'edit-announcement' pk=announcement.id %}>Edytuj</a>
                         <a class="btn btn-danger" href={% url 'delete-announcement' pk=announcement.id %}>Usuń</a>
                     {% endif %}

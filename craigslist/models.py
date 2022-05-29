@@ -7,11 +7,11 @@ from django.dispatch import receiver
 User = get_user_model()
 
 STATUS = (
-    (1, 'new'),
-    (2, 'accepted'),
-    (3, 'rejected'),
-    (4, 'reserved'),
-    (5, 'sold')
+    (1, 'nowe'),
+    (2, 'zaakceptowane'),
+    (3, 'odrzucone'),
+    (4, 'zarezerwowane'),
+    (5, 'sprzedane')
 )
 
 

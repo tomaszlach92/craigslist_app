@@ -14,7 +14,13 @@
                 <div class="col-md-6">
                     <div class="small mb-1">Dodane przez użytkownika {{ object.user_who_added }}</div>
                     {% if object.status == 1 %}
+                        <span class="badge bg-info">Oczekuje na akceptacje</span>
+                    {% endif %}
+                    {% if object.status == 2 %}
                         <span class="badge bg-success">Aktualne</span>
+                    {% endif %}
+                    {% if object.status == 3 %}
+                        <span class="badge bg-warning">Odrzucone</span>
                     {% endif %}
                     {% if object.status == 4 %}
                         <span class="badge bg-danger">Zarezerwowane</span>
@@ -32,7 +38,7 @@
                         {{ object.description }}
                     </p>
                     <div class="d-flex">
-                        {% if user.is_authenticated  and user != object.user_who_added and object.status == 1 %}
+                        {% if user.is_authenticated  and user != object.user_who_added and object.status == 2 %}
                             <form name="create_station" method="post" action="{% url 'book-announcement' %}">
                                 {% csrf_token %}
                                 <input name="announcement_id" hidden value="{{ object.id }}">

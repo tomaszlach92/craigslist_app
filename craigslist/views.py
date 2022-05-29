@@ -19,13 +19,13 @@ class AnnouncementListView(ListView):
     context_object_name = 'announcements'
 
     def get_queryset(self):
-        return Announcement.objects.filter(status=1)
+        return Announcement.objects.filter(status=2)
 
 
 class CategoryAnnouncementView(View):
     def get(self, request, category_id):
         category = get_object_or_404(Category, id=category_id)
-        announcements = Announcement.objects.filter(category_id=category_id)
+        announcements = Announcement.objects.filter(category_id=category_id, status=2)
         return render(request=request,
                       template_name="category_announcements.html",
                       context={
@@ -35,6 +35,7 @@ class CategoryAnnouncementView(View):
 
 
 class UserAnnouncementView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('login')
     def get(self, request):
         user = request.user
         announcements = Announcement.objects.filter(user_who_added=user)
@@ -67,7 +68,7 @@ class AddAnnouncementView(LoginRequiredMixin, FormView):
             user_who_added=user_who_added,
             image=image,
         )
-        messages.add_message(self.request, messages.SUCCESS, _('Ogłoszenie zostało dodane'))
+        messages.add_message(self.request, messages.SUCCESS, _('Ogłoszenie zostało dodane. Zanim pojawi się na stronie głównej musi zostać zaakceptowane przez Administratora'))
         redirect_site = super().form_valid(form)
         return redirect_site
 
@@ -77,6 +78,7 @@ class AnnouncementUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView
     form_class = AnnouncementForm
     success_url = reverse_lazy('my-announcements')
     template_name_suffix = '_update_form'
+    login_url = reverse_lazy('login')
 
     def test_func(self):
         obj = self.get_object()
@@ -86,6 +88,7 @@ class AnnouncementUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView
 class AnnouncementDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Announcement
     success_url = reverse_lazy('my-announcements')
+    login_url = reverse_lazy('login')
 
     def test_func(self):
         obj = self.get_object()
@@ -172,6 +175,7 @@ class UserProfileView(View):
 
 
 class ReservationCreateView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('login')
     def post(self, request):
         announcement_id = request.POST['announcement_id']
 
@@ -189,6 +193,7 @@ class ReservationCreateView(LoginRequiredMixin, View):
         return redirect('index')
 
 class UserReservationsView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('login')
     def get(self, request):
         user = request.user
         reservations = Reservation.objects.filter(reserved_by_user=user)
@@ -199,6 +204,7 @@ class UserReservationsView(LoginRequiredMixin, View):
                       })
 
 class TransactionCreateView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('login')
     def post(self, request):
         announcement_id = request.POST['announcement_id']
         announcement = Announcement.objects.get(pk=announcement_id)
