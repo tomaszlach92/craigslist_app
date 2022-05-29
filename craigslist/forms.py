@@ -55,6 +55,7 @@ class RegisterUserForm(forms.ModelForm):
         if password != repeat_password:
             raise ValidationError("Podane hasła są różne")
 
+
 class UserForm(forms.ModelForm):
     class Meta:
         model = User
