@@ -97,8 +97,12 @@ class AnnouncementDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView
 
 class LoginView(View):
     def get(self, request):
-        form = LoginForm()
-        return render(request, 'login_form.html', {"form": form})
+        if self.request.user.is_authenticated:
+            messages.add_message(request, messages.SUCCESS, _('Jesteś już zalogowany!'))
+            return redirect('index')
+        else:
+            form = LoginForm()
+            return render(request, 'login_form.html', {"form": form})
 
     def post(self, request):
         form = LoginForm(request.POST)
