@@ -76,17 +76,22 @@ class Profile(models.Model):
 
 class Reservation(models.Model):
     """
-    Stores a single reservation, related to :model:`craigslist.Announcement` and
+    Stores a single reservation, related to
+    :model:`craigslist.Announcement` and
     :model:`craigslist.User`.
     """
     announcement = models.ForeignKey(Announcement, on_delete=models.CASCADE)
-    reserved_by_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reservation")
+    reserved_by_user = models.ForeignKey(User, on_delete=models.CASCADE,
+                                         related_name="reservation")
 
 
 class Transaction(models.Model):
     """
-    Stores a single transaction, related to :model:`auth.User` and
+    Stores a single transaction, related to
+    :model:`auth.User` and
     :model:`auth.User`.
     """
-    seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name="seller")
-    buyer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="buyer")
+    seller = models.ForeignKey(User, on_delete=models.CASCADE,
+                               related_name="seller")
+    buyer = models.ForeignKey(User, on_delete=models.CASCADE,
+                              related_name="buyer")

@@ -1,9 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
-from django.views.generic import FormView, ListView, UpdateView, DeleteView, DetailView
+from django.views.generic import FormView, \
+    ListView, UpdateView, DeleteView, DetailView
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.urls import reverse_lazy
-from .forms import AnnouncementForm, LoginForm, RegisterUserForm, UserForm, ProfileForm
+from .forms import AnnouncementForm, LoginForm,\
+    RegisterUserForm, UserForm, ProfileForm
 from .models import Announcement, Category, STATUS, Reservation, Transaction
 from django.contrib.auth.models import User as AppUser
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -25,7 +27,8 @@ class AnnouncementListView(ListView):
         """
         Return the list of announcements for this view filter by status.
         """
-        return Announcement.objects.filter(status=2).order_by('created_at').reverse()
+        return Announcement.objects.\
+            filter(status=2).order_by('created_at').reverse()
 
 
 class CategoryAnnouncementView(View):
@@ -37,7 +40,9 @@ class CategoryAnnouncementView(View):
         Handle GET requests: to display category announcements list.
         """
         category = get_object_or_404(Category, id=category_id)
-        announcements = Announcement.objects.filter(category_id=category_id, status=2).order_by('created_at').reverse()
+        announcements = Announcement.objects.\
+            filter(category_id=category_id, status=2).\
+            order_by('created_at').reverse()
         return render(request=request,
                       template_name="category_announcements.html",
                       context={
@@ -95,12 +100,17 @@ class AddAnnouncementView(LoginRequiredMixin, FormView):
             image=image,
         )
         messages.add_message(self.request, messages.SUCCESS,
-                             _('Ogłoszenie zostało dodane. Zanim pojawi się na stronie głównej musi zostać zaakceptowane przez Administratora'))
+                             _('Ogłoszenie zostało dodane.'
+                               'Zanim pojawi się na stronie głównej musi '
+                               'zostać zaakceptowane przez Administratora')
+                             )
         redirect_site = super().form_valid(form)
         return redirect_site
 
 
-class AnnouncementUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class AnnouncementUpdateView(LoginRequiredMixin,
+                             UserPassesTestMixin,
+                             UpdateView):
     """
     Display view to update announcement.
     """
@@ -118,7 +128,9 @@ class AnnouncementUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView
         return obj.user_who_added == self.request.user
 
 
-class AnnouncementDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class AnnouncementDeleteView(LoginRequiredMixin,
+                             UserPassesTestMixin,
+                             DeleteView):
     """
     View to delete announcement.
     """
@@ -143,7 +155,9 @@ class LoginView(View):
         Handle GET requests: to display log in form.
         """
         if self.request.user.is_authenticated:
-            messages.add_message(request, messages.SUCCESS, _('Jesteś już zalogowany!'))
+            messages.\
+                add_message(request, messages.SUCCESS,
+                            _('Jesteś już zalogowany!'))
             return redirect('index')
         else:
             form = LoginForm()
@@ -160,7 +174,8 @@ class LoginView(View):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                messages.add_message(request, messages.SUCCESS, _('Zalogowano poprawnie!'))
+                messages.add_message(request, messages.SUCCESS,
+                                     _('Zalogowano poprawnie!'))
                 return redirect('index')
             else:
                 form.add_error(None, 'Niepoprawny login lub hasło')
@@ -187,7 +202,8 @@ class LogoutView(View):
         Handle GET requests: to log out user from app.
         """
         logout(request)
-        messages.add_message(request, messages.SUCCESS, _('Wylogowano z systemu!'))
+        messages.add_message(request, messages.SUCCESS,
+                             _('Wylogowano z systemu!'))
         return redirect('index')
 
 
@@ -212,7 +228,8 @@ class RegisterUserView(FormView):
         )
         redirect_site = super().form_valid(form)
         messages.add_message(self.request, messages.SUCCESS,
-                             _('Zostałeś zarejestrowany! Zaloguj się by móc dodawać ogłoszenia!'))
+                             _('Zostałeś zarejestrowany! '
+                               'Zaloguj się by móc dodawać ogłoszenia!'))
         return redirect_site
 
 
@@ -242,10 +259,12 @@ class UserProfileView(LoginRequiredMixin, View):
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
-            messages.add_message(request, messages.SUCCESS, _('Profil zaaktualizowany!'))
+            messages.add_message(request, messages.SUCCESS,
+                                 _('Profil zaaktualizowany!'))
             return redirect('my-profile')
         else:
-            messages.add_message(request, messages.WARNING, _('Popraw błędy w formularzu'))
+            messages.add_message(request, messages.WARNING,
+                                 _('Popraw błędy w formularzu'))
         profile_form = ProfileForm(instance=request.user.profile)
         return render(request, 'profile.html', {
             'user_form': user_form,
@@ -275,7 +294,10 @@ class ReservationCreateView(LoginRequiredMixin, View):
         )
 
         messages.add_message(request, messages.SUCCESS,
-                             _('Przedmiot zarezerwowany u sprzedającego! Skontaktuj się z nim w celu realizacji transakcji'))
+                             _('Przedmiot zarezerwowany u sprzedającego! '
+                               'Skontaktuj się z nim '
+                               'w celu realizacji transakcji')
+                             )
         return redirect('index')
 
 
@@ -319,5 +341,6 @@ class TransactionCreateView(LoginRequiredMixin, View):
         )
 
         messages.add_message(request, messages.SUCCESS,
-                             _('Potwierdziłeś otrzymanie przedmiotu. Dziękujemy za skorzystanie z serwisu'))
+                             _('Potwierdziłeś otrzymanie przedmiotu. '
+                               'Dziękujemy za skorzystanie z serwisu'))
         return redirect('index')

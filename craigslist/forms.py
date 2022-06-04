@@ -8,6 +8,7 @@ User = get_user_model()
 
 class AnnouncementForm(forms.ModelForm):
     """Form to add or update announcement."""
+
     class Meta:
         model = Announcement
         fields = ('title', 'description', 'price', 'category', 'image')
@@ -29,14 +30,21 @@ class AnnouncementForm(forms.ModelForm):
 
 class LoginForm(forms.Form):
     """Form to log in user"""
-    username = forms.CharField(label="Nazwa Użytkownika", widget=forms.TextInput(attrs={'class': "form-control"}))
-    password = forms.CharField(label="Hasło", widget=forms.PasswordInput(attrs={'class': "form-control"}))
+    username = forms.CharField(
+        label="Nazwa Użytkownika",
+        widget=forms.TextInput(attrs={'class': "form-control"}))
+    password = forms.CharField(label="Hasło",
+                               widget=forms.PasswordInput(
+                                   attrs={'class': "form-control"
+                                          }))
 
 
 class RegisterUserForm(forms.ModelForm):
     """Form to register user"""
     repeat_password = forms.CharField(label="Powtórz hasło",
-                                      widget=forms.PasswordInput(attrs={'class': "form-control"}))
+                                      widget=forms.PasswordInput(
+                                          attrs={'class': "form-control"
+                                                 }))
 
     class Meta:
         model = User
@@ -61,6 +69,7 @@ class RegisterUserForm(forms.ModelForm):
 
 class UserForm(forms.ModelForm):
     """Form to update user data"""
+
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'email')
@@ -78,6 +87,7 @@ class UserForm(forms.ModelForm):
 
 class ProfileForm(forms.ModelForm):
     """Form to update profile data"""
+
     class Meta:
         model = Profile
         fields = ('street', 'zip_code', 'city', 'phone',)

@@ -16,9 +16,17 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Reservation',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('announcement', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='craigslist.announcement')),
-                ('reserved_by_user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('id', models.BigAutoField(
+                    auto_created=True, primary_key=True,
+                    serialize=False, verbose_name='ID')),
+                ('announcement', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE,
+                    to='craigslist.announcement'
+                )),
+                ('reserved_by_user',
+                 models.ForeignKey(
+                     on_delete=django.db.models.deletion.CASCADE,
+                     to=settings.AUTH_USER_MODEL)),
             ],
         ),
     ]
