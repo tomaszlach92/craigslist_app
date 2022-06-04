@@ -14,16 +14,28 @@ User = get_user_model()
 
 
 class AnnouncementListView(ListView):
+    """
+    Display list all announcements with status = 2 ('zaakceptowane')
+    """
     model = Announcement
     template_name = 'index.html'
     context_object_name = 'announcements'
 
     def get_queryset(self):
+        """
+        Return the list of announcements for this view filter by status.
+        """
         return Announcement.objects.filter(status=2).order_by('created_at').reverse()
 
 
 class CategoryAnnouncementView(View):
+    """
+    Display list all announcements filter by category.
+    """
     def get(self, request, category_id):
+        """
+        Handle GET requests: to display category announcements list.
+        """
         category = get_object_or_404(Category, id=category_id)
         announcements = Announcement.objects.filter(category_id=category_id, status=2).order_by('created_at').reverse()
         return render(request=request,
@@ -35,9 +47,15 @@ class CategoryAnnouncementView(View):
 
 
 class UserAnnouncementView(LoginRequiredMixin, View):
+    """
+    Display list all announcements filter by user_who_added.
+    """
     login_url = reverse_lazy('login')
 
     def get(self, request):
+        """
+        Handle GET requests: to display user announcements list.
+        """
         user = request.user
         announcements = Announcement.objects.filter(user_who_added=user)
         return render(request=request,
@@ -49,12 +67,19 @@ class UserAnnouncementView(LoginRequiredMixin, View):
 
 
 class AddAnnouncementView(LoginRequiredMixin, FormView):
+    """
+    Display view to add new announcement.
+    """
     template_name = 'form.html'
     success_url = reverse_lazy('index')
     form_class = AnnouncementForm
     login_url = reverse_lazy('login')
 
     def form_valid(self, form):
+        """
+        Create new announcement object with the passed
+        POST variables.
+        """
         title = form.cleaned_data['title']
         description = form.cleaned_data['description']
         price = form.cleaned_data['price']
@@ -76,6 +101,9 @@ class AddAnnouncementView(LoginRequiredMixin, FormView):
 
 
 class AnnouncementUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    """
+    Display view to update announcement.
+    """
     model = Announcement
     form_class = AnnouncementForm
     success_url = reverse_lazy('my-announcements')
@@ -83,22 +111,37 @@ class AnnouncementUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView
     login_url = reverse_lazy('login')
 
     def test_func(self):
+        """
+        Check if request user is user who added announcement to update
+        """
         obj = self.get_object()
         return obj.user_who_added == self.request.user
 
 
 class AnnouncementDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    """
+    View to delete announcement.
+    """
     model = Announcement
     success_url = reverse_lazy('my-announcements')
     login_url = reverse_lazy('login')
 
     def test_func(self):
+        """
+        Check if request user is user who added announcement to delete
+        """
         obj = self.get_object()
         return obj.user_who_added == self.request.user
 
 
 class LoginView(View):
+    """
+    Display view to log in user.
+    """
     def get(self, request):
+        """
+        Handle GET requests: to display log in form.
+        """
         if self.request.user.is_authenticated:
             messages.add_message(request, messages.SUCCESS, _('Jesteś już zalogowany!'))
             return redirect('index')
@@ -107,6 +150,9 @@ class LoginView(View):
             return render(request, 'login_form.html', {"form": form})
 
     def post(self, request):
+        """
+        Handle POST requests: to authenticate user.
+        """
         form = LoginForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data['username']
@@ -126,22 +172,38 @@ class LoginView(View):
 
 
 class AnnouncementDetailView(DetailView):
+    """
+    Display view single announcement.
+    """
     model = Announcement
 
 
 class LogoutView(View):
+    """
+    View to log out user from app.
+    """
     def get(self, request):
+        """
+        Handle GET requests: to log out user from app.
+        """
         logout(request)
         messages.add_message(request, messages.SUCCESS, _('Wylogowano z systemu!'))
         return redirect('index')
 
 
 class RegisterUserView(FormView):
+    """
+    Display view to register user in app.
+    """
     template_name = 'form.html'
     success_url = reverse_lazy('index')
     form_class = RegisterUserForm
 
     def form_valid(self, form):
+        """
+        Create new user object with the passed
+        POST variables.
+        """
         username = form.cleaned_data['username']
         password = form.cleaned_data['password']
         AppUser.objects.create_user(
@@ -155,9 +217,15 @@ class RegisterUserView(FormView):
 
 
 class UserProfileView(LoginRequiredMixin, View):
+    """
+    Display view with user profile.
+    """
     login_url = reverse_lazy('login')
 
     def get(self, request):
+        """
+        Handle GET requests: to display user profile.
+        """
         user_form = UserForm(instance=request.user)
         profile_form = ProfileForm(instance=request.user.profile)
         return render(request, 'profile.html', {
@@ -166,6 +234,9 @@ class UserProfileView(LoginRequiredMixin, View):
         })
 
     def post(self, request):
+        """
+        Handle POST requests: to update user profile.
+        """
         user_form = UserForm(request.POST, instance=request.user)
         profile_form = ProfileForm(request.POST, instance=request.user.profile)
         if user_form.is_valid() and profile_form.is_valid():
@@ -183,9 +254,15 @@ class UserProfileView(LoginRequiredMixin, View):
 
 
 class ReservationCreateView(LoginRequiredMixin, View):
+    """
+    View to create new reservation object.
+    """
     login_url = reverse_lazy('login')
 
     def post(self, request):
+        """
+        Handle POST requests: to create new reservation object.
+        """
         announcement_id = request.POST['announcement_id']
 
         announcement = Announcement.objects.get(pk=announcement_id)
@@ -203,9 +280,15 @@ class ReservationCreateView(LoginRequiredMixin, View):
 
 
 class UserReservationsView(LoginRequiredMixin, View):
+    """
+    Display list all announcements filter by reserved_by_user.
+    """
     login_url = reverse_lazy('login')
 
     def get(self, request):
+        """
+        Handle GET requests: to display user reservations list.
+        """
         user = request.user
         reservations = Reservation.objects.filter(reserved_by_user=user)
         return render(request=request,
@@ -216,9 +299,15 @@ class UserReservationsView(LoginRequiredMixin, View):
 
 
 class TransactionCreateView(LoginRequiredMixin, View):
+    """
+    View to create new transaction object.
+    """
     login_url = reverse_lazy('login')
 
     def post(self, request):
+        """
+        Handle POST requests: to create new transaction object.
+        """
         announcement_id = request.POST['announcement_id']
         announcement = Announcement.objects.get(pk=announcement_id)
         announcement.status = 5

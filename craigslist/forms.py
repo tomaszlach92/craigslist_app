@@ -1,13 +1,13 @@
 from django import forms
-from craigslist.models import Announcement, Category, Profile
+from craigslist.models import Announcement, Profile
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-from django.core.validators import validate_email
 
 User = get_user_model()
 
 
 class AnnouncementForm(forms.ModelForm):
+    """Form to add or update announcement."""
     class Meta:
         model = Announcement
         fields = ('title', 'description', 'price', 'category', 'image')
@@ -28,11 +28,13 @@ class AnnouncementForm(forms.ModelForm):
 
 
 class LoginForm(forms.Form):
+    """Form to log in user"""
     username = forms.CharField(label="Nazwa Użytkownika", widget=forms.TextInput(attrs={'class': "form-control"}))
     password = forms.CharField(label="Hasło", widget=forms.PasswordInput(attrs={'class': "form-control"}))
 
 
 class RegisterUserForm(forms.ModelForm):
+    """Form to register user"""
     repeat_password = forms.CharField(label="Powtórz hasło",
                                       widget=forms.PasswordInput(attrs={'class': "form-control"}))
 
@@ -49,6 +51,7 @@ class RegisterUserForm(forms.ModelForm):
         }
 
     def clean(self):
+        """Compare the passwords that are the same"""
         cd = super().clean()
         password = cd['password']
         repeat_password = cd['repeat_password']
@@ -57,6 +60,7 @@ class RegisterUserForm(forms.ModelForm):
 
 
 class UserForm(forms.ModelForm):
+    """Form to update user data"""
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'email')
@@ -73,6 +77,7 @@ class UserForm(forms.ModelForm):
 
 
 class ProfileForm(forms.ModelForm):
+    """Form to update profile data"""
     class Meta:
         model = Profile
         fields = ('street', 'zip_code', 'city', 'phone',)

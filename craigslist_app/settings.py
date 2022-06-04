@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'craigslist',
+    'rest_framework_docs',
 ]
 
 MIDDLEWARE = [
@@ -130,6 +131,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = '/login'
 LOGIN_REDIRECT_URL = '/'
+
 
 import django_heroku
 

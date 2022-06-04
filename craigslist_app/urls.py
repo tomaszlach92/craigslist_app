@@ -18,6 +18,7 @@ from django.urls import path
 from django.conf.urls.static import static
 from django.conf import settings
 
+
 from craigslist.views import AnnouncementListView, AddAnnouncementView, CategoryAnnouncementView, LoginView, LogoutView, RegisterUserView, \
     UserAnnouncementView, AnnouncementUpdateView, AnnouncementDeleteView, UserProfileView, AnnouncementDetailView, ReservationCreateView,\
     UserReservationsView, TransactionCreateView
