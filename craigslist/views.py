@@ -100,7 +100,7 @@ class AddAnnouncementView(LoginRequiredMixin, FormView):
             image=image,
         )
         messages.add_message(self.request, messages.SUCCESS,
-                             _('Ogłoszenie zostało dodane.'
+                             _('Ogłoszenie zostało dodane. '
                                'Zanim pojawi się na stronie głównej musi '
                                'zostać zaakceptowane przez Administratora')
                              )
