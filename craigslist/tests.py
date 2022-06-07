@@ -1,7 +1,4 @@
-from multiprocessing.connection import Client
-
-import pytest
-from django.test import TestCase, Client
+from django.test import TestCase
 from django.urls import reverse
 from craigslist.models import Announcement, Category
 from django.contrib.auth.models import User as AppUser
@@ -50,7 +47,8 @@ class AnnouncementsIndexViewTests(TestCase):
 
     def test_no_announcements(self):
         """
-        If no announcements with status == 2 exist, an appropriate message is displayed.
+        If no announcements with status == 2 exist,
+        an appropriate message is displayed.
         """
         create_announcement(1, 'Elektronika')
         response = self.client.get(reverse('index'))
@@ -86,17 +84,22 @@ class AnnouncementsDetailViewTests(TestCase):
         Test resonse contains if announcement status == 1
         """
         announcement = create_announcement(1, 'Elektronika')
-        response = self.client.get(reverse('announcement', args=(announcement.id,)))
+        response = self.client.get(
+            reverse('announcement', args=(announcement.id,))
+        )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Oczekuje na akceptacje")
         self.assertNotContains(response, "Zarezerwuj przedmiot u kupującego")
 
     def test_announcement_status_accepted_detail_not_login_user(self):
         """
-        Test response contains if announcement status == 1 and user is not log in
+        Test response contains if announcement
+        status == 1 and user is not log in
         """
         announcement = create_announcement(2, 'Elektronika')
-        response = self.client.get(reverse('announcement', args=(announcement.id,)))
+        response = self.client.get(
+            reverse('announcement', args=(announcement.id,))
+        )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Aktualne")
         self.assertNotContains(response, "Zarezerwuj przedmiot u kupującego")
@@ -108,7 +111,9 @@ class AnnouncementsDetailViewTests(TestCase):
         user = create_test_user('test1', 'test1')
         self.client.login(username=user.username, password='test1')
         announcement = create_announcement(2, 'Elektronika')
-        response = self.client.get(reverse('announcement', args=(announcement.id,)))
+        response = self.client.get(
+            reverse('announcement', args=(announcement.id,))
+        )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Aktualne")
         self.assertContains(response, "Zarezerwuj przedmiot u kupującego")
@@ -140,8 +145,12 @@ class AnnouncementsCategoryViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context['announcements']), 1)
         self.assertContains(response, "Zobacz ogłoszenie")
-        self.assertContains(response, "Lista ogłoszeń dla kategorii Elektronika")
-        self.assertNotContains(response, "Lista ogłoszeń dla kategorii AGD")
+        self.assertContains(response,
+                            "Lista ogłoszeń dla kategorii Elektronika"
+                            )
+        self.assertNotContains(response,
+                               "Lista ogłoszeń dla kategorii AGD"
+                               )
 
 
 class UserAnnouncementViewTest(TestCase):
@@ -174,4 +183,6 @@ class UserAnnouncementViewTest(TestCase):
         response = self.client.get(reverse('my-announcements'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context['announcements']), 1)
-        self.assertContains(response, 'Lista Twoich wszystkich Twoich ogłoszeń')
+        self.assertContains(response,
+                            'Lista Twoich wszystkich Twoich ogłoszeń'
+                            )
